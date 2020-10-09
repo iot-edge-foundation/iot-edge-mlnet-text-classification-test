@@ -47,21 +47,21 @@ public class Score
 
 Direct method 'meassureSentiment' body format:
 
-'''
+```
 public class Request
 {
     public string comment {get; set;}
 }
-'''
+```
 
 Output message format:
 
-'''
+```
 public class Response
 {
     public string comment {get; set;}
 }
-'''
+```
 
 ## Route
 
