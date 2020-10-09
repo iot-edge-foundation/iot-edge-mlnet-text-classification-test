@@ -14,8 +14,6 @@ namespace MlNetTextClassificationTestModule
 
     class Program
     {
-        static int counter;
-
         static void Main(string[] args)
         {
             Init().Wait();
@@ -47,21 +45,52 @@ namespace MlNetTextClassificationTestModule
             ITransportSettings[] settings = { mqttSetting };
 
             // Open a connection to the Edge runtime
-            ModuleClient ioTHubModuleClient = await ModuleClient.CreateFromEnvironmentAsync(settings);
+            var ioTHubModuleClient = await ModuleClient.CreateFromEnvironmentAsync(settings);
             await ioTHubModuleClient.OpenAsync();
             Console.WriteLine("IoT Hub module client initialized.");
 
-            var request = new Request{comment = "Wow, this is sooo good"};
-    
-            var jsonString = JsonConvert.SerializeObject(request);
- 
-            using (var pipeMessage = new Message(UTF8Encoding.UTF8.GetBytes(jsonString)))
-            {
-                await ioTHubModuleClient.SendEventAsync("output1", pipeMessage);
-            
-                Console.WriteLine($"Message '{request.comment}' sent");
-            }
+
+            await ioTHubModuleClient.SetMethodHandlerAsync(
+                "meassureSentiment",
+                MeassureSentimentCallBack,
+                ioTHubModuleClient);
         }
+
+        private static async Task<MethodResponse> MeassureSentimentCallBack(MethodRequest methodRequest, object userContext)
+        {
+            Console.WriteLine($"Executing MeassureSentimentCallBack at {DateTime.UtcNow}");
+
+           var moduleClient = userContext as ModuleClient;
+            if (moduleClient == null)
+            {
+                throw new InvalidOperationException("UserContext doesn't contain " + "expected values");
+            }
+
+            try
+            {
+                var request = JsonConvert.DeserializeObject<Request>(methodRequest.DataAsJson);
+
+                var jsonString = JsonConvert.SerializeObject(request);
+    
+                using (var pipeMessage = new Message(UTF8Encoding.UTF8.GetBytes(jsonString)))
+                {
+                    Console.WriteLine($"Message '{request.comment}' sent");
+
+                    await moduleClient.SendEventAsync("output1", pipeMessage);                
+                }
+
+                Console.WriteLine($"MeassureSentimentCallBack ready at {DateTime.UtcNow}.");
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"Exception {ex.Message}");
+            }
+            
+            var response = new MethodResponse(200);
+
+            return response;  
+        }
+
     }
     
     public class Request
