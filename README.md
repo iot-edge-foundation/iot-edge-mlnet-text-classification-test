@@ -19,5 +19,6 @@ The two modules are conencted with a route:
 
 This results in:
 
+![](https://github.com/sandervandevelde/iot-edge-mlnet-text-classification-test/assets/flow.png)
 
 
