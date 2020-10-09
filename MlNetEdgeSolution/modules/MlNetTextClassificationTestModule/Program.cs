@@ -60,9 +60,10 @@ namespace MlNetTextClassificationTestModule
 
         private static async Task<MethodResponse> MeassureSentimentCallBack(MethodRequest methodRequest, object userContext)
         {
-            Console.WriteLine($"Executing MeassureSentimentCallBack at {DateTime.UtcNow}");
+            Console.WriteLine($"MeassureSentiment started at {DateTime.UtcNow}");
 
            var moduleClient = userContext as ModuleClient;
+           
             if (moduleClient == null)
             {
                 throw new InvalidOperationException("UserContext doesn't contain " + "expected values");
@@ -81,7 +82,7 @@ namespace MlNetTextClassificationTestModule
                     await moduleClient.SendEventAsync("output1", pipeMessage);                
                 }
 
-                Console.WriteLine($"MeassureSentimentCallBack ready at {DateTime.UtcNow}.");
+                Console.WriteLine($"MeassureSentiment ready at {DateTime.UtcNow}.");
             }
             catch (Exception ex)
             {

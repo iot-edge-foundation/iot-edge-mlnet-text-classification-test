@@ -4,7 +4,7 @@
     "image": {
         "repository": "svelde/iot-edge-mlnet-text-classification-test",
         "tag": {
-            "version": "0.0.5",
+            "version": "1.0.0",
             "platforms": {
                 "amd64": "./Dockerfile.amd64", 
                 "amd64.debug": "./Dockerfile.amd64.debug",

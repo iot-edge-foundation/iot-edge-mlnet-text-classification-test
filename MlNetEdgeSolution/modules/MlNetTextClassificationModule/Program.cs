@@ -119,7 +119,7 @@ namespace MlNetModule
 
                         foreach(var s in response.scores)
                         {
-                            System.Console.Write($"{s}; "   );
+                            System.Console.Write($"{s.entry}; "   );
                         }
 
                         System.Console.WriteLine();
