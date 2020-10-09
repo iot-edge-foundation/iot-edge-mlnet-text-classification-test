@@ -54,6 +54,8 @@ namespace MlNetTextClassificationTestModule
                 "meassureSentiment",
                 MeassureSentimentCallBack,
                 ioTHubModuleClient);
+
+            System.Console.WriteLine("Direct method 'meassureSentiment' is now attached.");
         }
 
         private static async Task<MethodResponse> MeassureSentimentCallBack(MethodRequest methodRequest, object userContext)

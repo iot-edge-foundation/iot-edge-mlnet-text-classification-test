@@ -114,6 +114,15 @@ namespace MlNetModule
                         await moduleClient.SendEventAsync("output1", pipeMessage);
                     
                         Console.WriteLine($"Scored '{response.comment}' message ({response.prediction}) sent.");
+
+                        System.Console.Write("scores: ");
+
+                        foreach(var s in response.scores)
+                        {
+                            System.Console.Write($"{s}; "   );
+                        }
+
+                        System.Console.WriteLine();
                     }
                 }
                 else
