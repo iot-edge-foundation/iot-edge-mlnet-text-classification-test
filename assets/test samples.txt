@@ -1,0 +1,7 @@
+Received message: 1, Body: [{"comment":"I do not recommend this restaurant"}]
+Scored 'I do not recommend this restaurant' message (negative) sent.
+scores: 0.01774209; 0.98225784;
+
+Received message: 3, Body: [{"comment":"The food is super great"}]
+Scored 'The food is super great' message (positive) sent.
+scores: 0.9949398; 0.0050602434;

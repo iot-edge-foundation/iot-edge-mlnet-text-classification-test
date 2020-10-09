@@ -1,0 +1,13 @@
+﻿Comment;Sentiment
+Hurry, I'm Happy;positive
+Boohoo, i'm sad;negative
+Wow, love this place;positive
+Crust is not good;negative
+Not tasty and the texture was just nasty;negative
+Stopped by and loved it;positive
+A great touch;positive
+The fries were great too;positive
+The potatoes were feeling like rubber;negative
+Honestly it did not tast that fresh;negative
+Now I'm getting angry;negative
+The selection on the menu was great and so were the prices;positive
