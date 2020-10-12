@@ -63,97 +63,97 @@ namespace MlNetModule
         /// It just pipe the messages without any change.
         /// It prints all the incoming messages.
         /// </summary>
-static async Task<MessageResponse> PipeMessage(Message message, object userContext)
-{
-    int counterValue = Interlocked.Increment(ref counter);
-
-    var moduleClient = userContext as ModuleClient;
-    if (moduleClient == null)
-    {
-        throw new InvalidOperationException("UserContext doesn't contain " + "expected values");
-    }
-
-    byte[] messageBytes = message.GetBytes();
-    string messageString = Encoding.UTF8.GetString(messageBytes);
-    Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
-
-    if (string.IsNullOrEmpty(messageString))
-    {
-        System.Console.WriteLine($"Request '{messageString}' cannot be converted into the right request. Ignored.");
-
-        return MessageResponse.Completed;
-    }
-
-    var request = JsonConvert.DeserializeObject<Request>(messageString);
-
-    ModelInput modelInput = new ModelInput()
-    {
-        Comment = request.comment,
-    };
-
-    try
-    {
-        // Make a single prediction on the sample data and print results
-        var predictionResult = ConsumeModel.Predict(modelInput);
-
-        var scores = predictionResult.Score.Select(x => new Score{entry = x}).ToArray();
-
-        var response = new Response()
+        static async Task<MessageResponse> PipeMessage(Message message, object userContext)
         {
-            comment = modelInput.Comment,
-            prediction = predictionResult.Prediction,
-            scores = scores,
-        };
+            int counterValue = Interlocked.Increment(ref counter);
 
-        var jsonString = JsonConvert.SerializeObject(response);
-
-        if (!string.IsNullOrEmpty(jsonString))
-        {
-            using (var pipeMessage = new Message(UTF8Encoding.UTF8.GetBytes(jsonString)))
+            var moduleClient = userContext as ModuleClient;
+            if (moduleClient == null)
             {
-                await moduleClient.SendEventAsync("output1", pipeMessage);
-            
-                Console.WriteLine($"Scored '{response.comment}' message ({response.prediction}) sent.");
-
-                System.Console.Write("scores: ");
-
-                foreach(var s in response.scores)
-                {
-                    System.Console.Write($"{s.entry}; "   );
-                }
-
-                System.Console.WriteLine();
+                throw new InvalidOperationException("UserContext doesn't contain " + "expected values");
             }
-        }
-        else
-        {
-            System.Console.WriteLine($"Response '{jsonString}' cannot be converted into the right reponse. Ignored.");
+
+            byte[] messageBytes = message.GetBytes();
+            string messageString = Encoding.UTF8.GetString(messageBytes);
+            Console.WriteLine($"Received message: {counterValue}, Body: [{messageString}]");
+
+            if (string.IsNullOrEmpty(messageString))
+            {
+                System.Console.WriteLine($"Request '{messageString}' cannot be converted into the right request. Ignored.");
+
+                return MessageResponse.Completed;
+            }
+
+            var request = JsonConvert.DeserializeObject<Request>(messageString);
+
+            ModelInput modelInput = new ModelInput()
+            {
+                Comment = request.comment,
+            };
+
+            try
+            {
+                // Make a single prediction on the sample data and print results
+                var predictionResult = ConsumeModel.Predict(modelInput);
+
+                var scores = predictionResult.Score.Select(x => new Score{entry = x}).ToArray();
+
+                var response = new Response()
+                {
+                    comment = modelInput.Comment,
+                    prediction = predictionResult.Prediction,
+                    scores = scores,
+                };
+
+                var jsonString = JsonConvert.SerializeObject(response);
+
+                if (!string.IsNullOrEmpty(jsonString))
+                {
+                    using (var pipeMessage = new Message(UTF8Encoding.UTF8.GetBytes(jsonString)))
+                    {
+                        await moduleClient.SendEventAsync("output1", pipeMessage);
+                    
+                        Console.WriteLine($"Scored '{response.comment}' message ({response.prediction}) sent.");
+
+                        System.Console.Write("scores: ");
+
+                        foreach(var s in response.scores)
+                        {
+                            System.Console.Write($"{s.entry}; "   );
+                        }
+
+                        System.Console.WriteLine();
+                    }
+                }
+                else
+                {
+                    System.Console.WriteLine($"Response '{jsonString}' cannot be converted into the right reponse. Ignored.");
+                }
+            }
+            catch(Exception ex)
+            {
+                System.Console.WriteLine($"Exception: {ex.Message}");
+            }
+
+            return MessageResponse.Completed;
         }
     }
-    catch(Exception ex)
+
+    public class Request
     {
-        System.Console.WriteLine($"Exception: {ex.Message}");
+        public string comment {get; set;}
     }
 
-    return MessageResponse.Completed;
-}
-}
+    public class Response
+    {
+        public string comment {get; set;}
+        public string prediction {get; set;}
 
-public class Request
-{
-public string comment {get; set;}
-}
+        public Score[] scores {get; set;}
+    }
 
-public class Response
-{
-public string comment {get; set;}
-public string prediction {get; set;}
-
-public Score[] scores {get; set;}
-}
-
-public class Score
-{
-public float entry {get; set;}
-}
+    public class Score
+    {
+        public float entry {get; set;}
+    }
 }
