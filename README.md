@@ -73,8 +73,25 @@ This results in:
 
 ![](https://github.com/sandervandevelde/iot-edge-mlnet-text-classification-test/blob/main/assets/flow.png)
 
+## DockerHub
+
+The modules are available from Docker hub directly:
+
+    svelde/iot-edge-mlnet-text-classification-test:1.0.0
+    https://hub.docker.com/repository/docker/svelde/iot-edge-mlnet-text-classification-test
+
+and
+
+    svelde/iot-edge-mlnet-text-classification:1.0.0
+    https://hub.docker.com/repository/docker/svelde/iot-edge-mlnet-text-classification
+
+
 ## Contribute
 
+This project is open source and availabe under MIT license.
+
 Feel free to contribite to this project.
+
+Or buy us a beer if it realy helped you :-) 
 
 
