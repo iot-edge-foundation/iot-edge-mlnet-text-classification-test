@@ -49,7 +49,6 @@ namespace MlNetTextClassificationTestModule
             await ioTHubModuleClient.OpenAsync();
             Console.WriteLine("IoT Hub module client initialized.");
 
-
             await ioTHubModuleClient.SetMethodHandlerAsync(
                 "meassureSentiment",
                 MeassureSentimentCallBack,
@@ -77,6 +76,9 @@ namespace MlNetTextClassificationTestModule
     
                 using (var pipeMessage = new Message(UTF8Encoding.UTF8.GetBytes(jsonString)))
                 {
+                    pipeMessage.ContentType = "application/json";
+                    pipeMessage.ContentEncoding = "utf-8";
+                    
                     Console.WriteLine($"Message '{request.comment}' sent");
 
                     await moduleClient.SendEventAsync("output1", pipeMessage);                
@@ -93,7 +95,6 @@ namespace MlNetTextClassificationTestModule
 
             return response;  
         }
-
     }
     
     public class Request
