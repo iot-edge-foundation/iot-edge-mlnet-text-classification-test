@@ -111,6 +111,9 @@ namespace MlNetModule
                 {
                     using (var pipeMessage = new Message(UTF8Encoding.UTF8.GetBytes(jsonString)))
                     {
+                        pipeMessage.ContentType = "application/json";
+                        pipeMessage.ContentEncoding = "utf-8";
+                    
                         await moduleClient.SendEventAsync("output1", pipeMessage);
                     
                         Console.WriteLine($"Scored '{response.comment}' message ({response.prediction}) sent.");
